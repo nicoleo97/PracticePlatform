@@ -1,4 +1,5 @@
 import streamlit as st 
 import numpy as np 
-import math from numpy 
+from numpy import math
 
+st.title(Übungsplattform für MAM)
