@@ -1,0 +1,1 @@
+tab1, tab2 = st.tabs("Finde den Punkt", "Monotonie")
