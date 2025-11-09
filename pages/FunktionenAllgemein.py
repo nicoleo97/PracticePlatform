@@ -194,7 +194,7 @@ if STATEMENT_DATA_KEY not in st.session_state:
 # =========================
 # UI
 # =========================
-st.title("Funktionen allgemein")
+st.set_page_config(page_title="Funktionen allgemein", page_icon="🧮")
 
 tab1, tab2 = st.tabs([
     "Besondere Punkte einer Funktion",
