@@ -99,10 +99,10 @@ VARIABLE_EXAMPLES = [
     {
         "text": (
             "Eine Läuferin zeichnet auf, wie weit sie bei einem Trainingslauf kommt. "
-            "Nach jeder Stunde notiert sie die bereits zurückgelegte Strecke."
+            "Nach jeder viertel Stunde notiert sie die bereits zurückgelegte Strecke."
         ),
-        "independent": {"symbol": "t", "description": "Zeit", "unit": "h"},
-        "dependent": {"symbol": "s", "description": "Wegstrecke", "unit": "km"},
+        "independent": {"symbol": "t", "description": "Zeit", "unit": "min"},
+        "dependent": {"symbol": "s", "description": "Wegstrecke", "unit": "m"},
     },
     {
         "text": (
