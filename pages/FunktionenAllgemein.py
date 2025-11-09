@@ -196,6 +196,28 @@ if STATEMENT_DATA_KEY not in st.session_state:
 # =========================
 st.set_page_config(page_title="Funktionen allgemein", page_icon="🧮")
 
+st.title("Funktionen allgemein")
+
+st.markdown(
+    """
+    Es wird angenommen, dass die gezeigte Funktion an beiden Enden ins **Unendliche** verläuft.
+    Das bedeutet:
+    """
+)
+st.latex(r"D = \mathbb{R}")
+st.latex(r"W = \mathbb{R}")
+
+st.markdown(
+    """
+    Beim Ermitteln der Variablen ist das **Symbol frei wählbar** – du kannst selbst entscheiden,
+    wie du die Variablen abkürzt. Die **Bedeutung** ist durch den Text vorgegeben.
+
+    Die **Einheit** hat mehrere Möglichkeiten (z. B. kann **Zeit** in Stunden, Minuten oder Jahren
+    angegeben werden; **Weg** in Metern, Kilometern, …).  
+    In der Lösung wird die **am besten passende Einheit** angezeigt.
+    """
+)
+
 tab1, tab2 = st.tabs([
     "Besondere Punkte einer Funktion",
     "Abhängige und unabhängige Variablen",
