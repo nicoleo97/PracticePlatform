@@ -136,29 +136,31 @@ def build_cubic_coeff(rng: np.random.Generator) -> dict:
 
 def build_quadratic_roots(rng: np.random.Generator) -> dict:
     """
-    Quadratisch per Wurzeln (stabil klare Form):
-      f(x) = s (x-r1)(x-r2), s ∈ {±1, ±2}
-      r1 != r2, r1,r2 in [-6,6], keine Wurzel bei 0 → d != 0
-      Scheitel in [-10,10] und |f(xv)| ≥ 3
+    f(x) = s (x-r1)(x-r2), s ∈ {±1, ±2}
+    - r1 != r2, r1,r2 in [-6,6], keine Wurzel bei 0
+    - Scheitel xv in [-8,8] und |f(xv)| in [3, 8]  -> sicher sichtbar in y∈[-10,10]
     """
     scale_choices = [1, -1, 2, -2]
     candidates = [x for x in np.arange(-6.0, 6.5, 0.5) if abs(x) > 1e-9]
+
     while True:
         r1, r2 = rng.choice(candidates, size=2, replace=False)
         if abs(r2 - r1) < 0.75:
             continue
         s = float(rng.choice(scale_choices))
+
         a = s
         b = -s * (r1 + r2)
         c = s * r1 * r2
         poly = np.poly1d([a, b, c])
 
         xv = -b / (2 * a)
-        if not (-10 <= xv <= 10):
+        if not (-8 <= xv <= 8):
             continue
         yv = float(poly(xv))
-        if abs(yv) < 3.0:
+        if not (3.0 <= abs(yv) <= 8.0):
             continue
+
         y0 = float(poly(0.0))
         if abs(y0) < 1e-9:  # keine Nullstelle bei 0
             continue
@@ -188,13 +190,12 @@ def generate_alternating_poly() -> dict:
 # ----------------- Plot -----------------
 def plot_poly_with_markers(problem: dict, show_solution: bool):
     poly = problem["poly"]
-
     x_left, x_right = -10.0, 10.0
-    y_bottom, y_top = -10.0, 10.0   # << fix
+    y_bottom, y_top = -10.0, 10.0
 
     fig, ax = plt.subplots(figsize=(7.8, 5.4))
 
-    # Linie etwas länger, damit Enden am Rahmen verschwinden
+    # Kurve (etwas über Rand hinaus)
     xx = np.linspace(x_left - 2, x_right + 2, 1600)
     yy = poly(xx)
     line, = ax.plot(xx, yy, linewidth=2.0)
@@ -204,10 +205,39 @@ def plot_poly_with_markers(problem: dict, show_solution: bool):
     ax.set_xlim(x_left, x_right)
     ax.set_ylim(y_bottom, y_top)
 
-    # optionale Ticks:
     import matplotlib.ticker as ticker
     ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
     ax.yaxis.set_major_locator(ticker.MultipleLocator(1))
+
+    # -------- Marker & Labels bei Lösung --------
+    if show_solution:
+        # Nullstellen (reelle)
+        roots = [r.real for r in problem.get("poly").r if abs(r.imag) < 1e-10] \
+                if "poly" in problem else problem.get("roots", [])
+        for r in roots:
+            if np.isfinite(r) and x_left <= r <= x_right:
+                ax.scatter(r, 0, s=120, facecolors="white", edgecolors="#ff7f0e", linewidths=2, zorder=3)
+                ax.annotate("N", xy=(r, 0), xytext=(0, 10), textcoords="offset points",
+                            ha="center", color="#ff7f0e", fontsize=12, fontweight="bold")
+
+        # y-Achsenabschnitt d
+        x0, y0 = problem["intercept"]
+        if y_bottom <= y0 <= y_top:
+            ax.scatter(x0, y0, s=120, facecolors="white", edgecolors="#2ca02c", linewidths=2, zorder=3)
+            ax.annotate("d", xy=(x0, y0), xytext=(10, 10), textcoords="offset points",
+                        color="#2ca02c", fontsize=12, fontweight="bold")
+
+        # Extrempunkte
+        for cp in problem.get("critical_points", []):
+            if x_left <= cp.x <= x_right and y_bottom <= cp.y <= y_top:
+                color = "#d62728" if cp.kind == "Maximum" else "#9467bd"
+                label = "Max" if cp.kind == "Maximum" else "Min"
+                ax.scatter(cp.x, cp.y, s=130, facecolors="white", edgecolors=color, linewidths=2, zorder=3)
+                ax.annotate(label, xy=(cp.x, cp.y), xytext=(6, 12), textcoords="offset points",
+                            color=color, fontsize=12, fontweight="bold")
+
+    fig.tight_layout()
+    return fig
 
 # ----------------- Variable-Tab (unverändert) -----------------
 VARIABLE_EXAMPLES = [
