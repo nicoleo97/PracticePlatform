@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
 
-
 CUBIC_PROBLEM_KEY = "cubic_problem"
 CUBIC_SOLUTION_KEY = "cubic_show_solution"
 VARIABLE_PROBLEM_KEY = "variable_problem"
