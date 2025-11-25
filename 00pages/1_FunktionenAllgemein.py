@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import streamlit as st
 
-# ----------------- Session Keys -----------------
+# ----------------- Session xKeys -----------------
 POLY_PROBLEM_KEY = "poly_problem_coeff_v1"
 POLY_SHOW_KEY    = "poly_show_solution_coeff_v1"
 POLY_LAST_DEGREE = "poly_last_degree_coeff_v1"   # 2 oder 3
