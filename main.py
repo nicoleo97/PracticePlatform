@@ -107,13 +107,15 @@ with tab_3ak:
 
     # 3AK – Hauptmenü (eigener Text)
     with sub_3ak[0]:
-        st.title("3AK – Exponentialfunktionen und Änderungsmaße")
+        st.title("Übungsplattform für Mathematik (für die 3AK)")
         st.markdown(
             """
             Hier findest du Übungsaufgaben zu **Exponentialgleichungen**,  
             **Änderungsmaßen & Änderungsfaktoren** sowie **Exponentialfunktionen**.
 
             Wähle oben den passenden Reiter, um mit den Aufgaben zu starten.
+
+            Wenn du Fragen hast oder dir Fehler auffallen, kannst du mich jederzeit per MS Teams kontaktieren.
             """
         )
 

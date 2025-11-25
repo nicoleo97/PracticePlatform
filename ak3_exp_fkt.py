@@ -21,19 +21,22 @@ def _mode_graph():
         while True:
             # kleiner, gut lesbarer Startwert
             N0 = random.randint(1, 5)          # 1–5
-            # N(1) als ganze Zahl, größer als N0
+
             # 50% Wachstum, 50% Zerfall
             if random.random() < 0.5:
                 # Wachstum
                 N1 = random.randint(N0 + 1, N0 + 12)
             else:
-                # Zerfall – aber N1 darf nicht 0 werden
+                # Zerfall – aber N1 darf nicht 0 werden und N0 darf nicht 1 sein
+                if N0 == 1:
+                    continue
                 N1 = random.randint(1, N0 - 1)
+
             a = N1 / N0
 
             # prüfen, ob N(3) nicht zu groß wird
             N3 = N0 * (a ** 3)
-            if N3 <= 40:       # Obergrenze, damit der Graph schön im Bild bleibt
+            if 0 < N3 <= 40:       # Obergrenze, damit der Graph schön im Bild bleibt
                 break
 
         ts = [0, 1, 2, 3]
@@ -59,10 +62,10 @@ def _mode_graph():
     x_vals = np.linspace(0, 3, 400)
     y_vals = N0 * (a ** x_vals)
 
-    # Standard-Achsen (links/unten) wie im Lehrbuch
+    # Graph (klassische Achsen)
     ax.plot(x_vals, y_vals, linewidth=2)
 
-    # Bereich so, dass N(3) gut sichtbar ist, unten bei 0 startend
+    # sichtbarer Bereich
     ax.set_xlim(0, 3)
     y_max = max(N0 * (a ** np.array([0, 1, 2, 3])))
     y_max = y_max * 1.1
@@ -70,16 +73,15 @@ def _mode_graph():
         y_max = max(N0, N0 * a) + 2
     ax.set_ylim(0, y_max)
 
-    # Y-Ticks: in 1er-Schritten, damit N(0) und N(1) exakt ablesbar sind
+    # Y-Ticks: 1er Schritte
     y_ticks = np.arange(0, math.ceil(y_max) + 1, 1)
     ax.set_yticks(y_ticks)
 
-    # X-Ticks: 0, 1, 2, 3 – N(0) und N(1) liegen genau auf Gitter-Schnitten
+    # X-Ticks
     ax.set_xticks([0, 1, 2, 3])
 
-    # Grid in ganzen Schritten
+    # Grid
     ax.grid(True, which="major", linestyle="-", linewidth=0.5)
-
     ax.set_xlabel("t")
     ax.set_ylabel("N(t)")
 
@@ -113,7 +115,7 @@ def _mode_aufstellen():
 
             N0 = random.choice([5, 10, 20, 25, 50])
             t1 = random.randint(2, 5)
-            a = random.randint(12, 30) / 10  # 1.2 bis 3.0
+            a = random.randint(12, 30) / 10
             N_t1 = round(N0 * (a ** t1), 2)
 
             text = (
@@ -128,7 +130,7 @@ def _mode_aufstellen():
 
             N0 = random.randint(2, 20)
             t1 = random.randint(2, 5)
-            a = random.randint(12, 25) / 10  # 1.2 bis 2.5
+            a = random.randint(12, 25) / 10
             N_t1 = round(N0 * (a ** t1))
 
             text = (
