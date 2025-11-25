@@ -55,6 +55,7 @@ def _mode_abs():
         }
 
     if st.button("Neues Beispiel", key="btn_abs_new"):
+        st.session_state.pop(key, None)
         years, vals, scen = _random_table()
         st.session_state[key] = {
             "years": years,
@@ -74,8 +75,7 @@ def _mode_abs():
     st.dataframe({"t [Jahr]": years, "W(t) [Euro]": vals}, hide_index=True)
 
     if data["i1"] is None:
-        i1, i2 = sorted(random.sample(range(4), 2))
-        data["i1"], data["i2"] = i1, i2
+        data["i1"], data["i2"] = sorted(random.sample(range(4), 2))
 
     i1, i2 = data["i1"], data["i2"]
     t1, t2 = years[i1], years[i2]
@@ -107,6 +107,7 @@ def _mode_mittel():
         }
 
     if st.button("Neues Beispiel", key="btn_mittel_new"):
+        st.session_state.pop(key, None)
         years, vals, scen = _random_table()
         st.session_state[key] = {
             "years": years,
@@ -126,8 +127,7 @@ def _mode_mittel():
     st.dataframe({"t [Jahr]": years, "W(t) [Euro]": vals}, hide_index=True)
 
     if data["i1"] is None:
-        i1, i2 = sorted(random.sample(range(4), 2))
-        data["i1"], data["i2"] = i1, i2
+        data["i1"], data["i2"] = sorted(random.sample(range(4), 2))
 
     i1, i2 = data["i1"], data["i2"]
     t1, t2 = years[i1], years[i2]
@@ -162,6 +162,7 @@ def _mode_rel():
         }
 
     if st.button("Neues Beispiel", key="btn_rel_new"):
+        st.session_state.pop(key, None)
         years, vals, scen = _random_table()
         st.session_state[key] = {
             "years": years,
@@ -169,7 +170,7 @@ def _mode_rel():
             "scenario": scen,
             "name": random.choice(["Anna", "Ben", "Clara", "David", "Eva", "Felix"]),
             "i1": None,
-            "i2": None,
+            "i2": None
         }
 
     data = st.session_state[key]
@@ -181,8 +182,7 @@ def _mode_rel():
     st.dataframe({"t [Jahr]": years, "W(t) [Euro]": vals}, hide_index=True)
 
     if data["i1"] is None:
-        i1, i2 = sorted(random.sample(range(4), 2))
-        data["i1"], data["i2"] = i1, i2
+        data["i1"], data["i2"] = sorted(random.sample(range(4), 2))
 
     i1, i2 = data["i1"], data["i2"]
     t1, t2 = years[i1], years[i2]
@@ -198,6 +198,7 @@ def _mode_rel():
             rf"\frac{{W({t2}) - W({t1})}}{{W({t1})}} = "
             rf"\frac{{{w2}-{w1}}}{{{w1}}} = {rel_dec}"
         )
+
         st.markdown(f"**≈ {rel_pct}%**")
 
 
@@ -206,7 +207,7 @@ def _mode_rel():
 # ==========================================================
 
 def _changer_single():
-    """Untertab: Änderungsfaktor."""
+    """Untertab: einfacher Änderungsfaktor."""
     if st.button("Neues Beispiel", key="af_new"):
         st.session_state.pop("af_single", None)
 
@@ -231,18 +232,14 @@ def _changer_single():
 
         if direction == "steigt":
             a = 1 + p_dec
-            st.latex(
-                rf"a = 1 + {p_dec} = {a:.4f}"
-            )
+            st.latex(rf"a = 1 + {p_dec} = {a:.4f}")
         else:
             a = 1 - p_dec
-            st.latex(
-                rf"a = 1 - {p_dec} = {a:.4f}"
-            )
+            st.latex(rf"a = 1 - {p_dec} = {a:.4f}")
 
 
 def _changer_total():
-    """Untertab: Gesamter Änderungsfaktor."""
+    """Untertab: gesamter Änderungsfaktor."""
     if st.button("Neues Beispiel", key="afg_new"):
         st.session_state.pop("af_ges", None)
 
@@ -251,7 +248,8 @@ def _changer_total():
         for _ in range(3):
             perc = random.choice([round(random.uniform(0.5, 50), 1), random.randint(1, 70)])
             direction = random.choice(["steigt", "sinkt"])
-            steps.append((direction, perc))
+            a = round(1 + perc/100, 4) if direction == "steigt" else round(1 - perc/100, 4)
+            steps.append((direction, perc, a))
 
         item = random.choice([
             "Der Wert eines Handys",
@@ -264,8 +262,9 @@ def _changer_total():
 
     item, steps = st.session_state["af_ges"]
 
+    # Text korrekt formuliert
     text = f"{item} "
-    for i, (direction, perc) in enumerate(steps):
+    for i, (direction, perc, _) in enumerate(steps):
         if i == 0:
             text += f"{direction} zuerst um {perc}%"
         elif i == 1:
@@ -278,29 +277,24 @@ def _changer_total():
     st.markdown("**Aufgabe:** Ermittle den gesamten Änderungsfaktor.")
 
     if st.button("Lösung anzeigen", key="afg_sol"):
-        facs = []
-        p_steps = []
-
-        for direction, perc in steps:
-            p_dec = round(perc/100, 4)
-            if direction == "steigt":
-                facs.append(1 + p_dec)
-                p_steps.append(f"1 + {p_dec}")
-            else:
-                facs.append(1 - p_dec)
-                p_steps.append(f"1 - {p_dec}")
+        facs = [a for (_, _, a) in steps]
 
         prod = 1
         for f in facs:
             prod *= f
 
-        latex_prod = " \\cdot ".join(p_steps)
+        latex_chain = " \\cdot ".join([f"{f:.4f}" for f in facs])
 
-        st.latex(rf"a_\text{{gesamt}} = {latex_prod} = {prod:.4f}")
+        st.latex(rf"a_\text{{gesamt}} = {latex_chain} = {prod:.4f}")
 
 
 def _changer_mean():
-    """Untertab: Mittlerer Änderungsfaktor."""
+    """Untertab: mittlerer Änderungsfaktor."""
+    # Falls beschädigter Session State existiert → löschen
+    if "af_mittel" in st.session_state:
+        if len(st.session_state["af_mittel"]) != 3:
+            st.session_state.pop("af_mittel")
+
     if st.button("Neues Beispiel", key="afm_new"):
         st.session_state.pop("af_mittel", None)
 
@@ -309,7 +303,10 @@ def _changer_mean():
         for _ in range(3):
             perc = random.choice([round(random.uniform(0.5, 50), 1), random.randint(1, 70)])
             direction = random.choice(["steigt", "sinkt"])
-            steps.append((direction, perc))
+            a = round(1 + perc/100, 4) if direction == "steigt" else round(1 - perc/100, 4)
+            steps.append((direction, perc, a))
+
+        unit = random.choice(["Monat", "Woche", "Jahr"])
 
         item = random.choice([
             "Der Wert eines Handys",
@@ -318,16 +315,15 @@ def _changer_mean():
             "Der Wert eines Fahrrads"
         ])
 
-        unit = random.choice(["Monat", "Woche", "Jahr"])
-
         st.session_state["af_mittel"] = (item, steps, unit)
 
     item, steps, unit = st.session_state["af_mittel"]
 
+    # Angabetext
     text = f"{item} "
-    for i, (direction, perc) in enumerate(steps):
+    for i, (direction, perc, _) in enumerate(steps):
         if i == 0:
-            text += f"sinkt im 1. {unit} um {perc}%"
+            text += f"{direction} im 1. {unit} um {perc}%"
         elif i == 1:
             text += f", {direction} im 2. {unit} um {perc}%"
         else:
@@ -338,18 +334,7 @@ def _changer_mean():
     st.markdown("**Aufgabe:** Ermittle den mittleren Änderungsfaktor.")
 
     if st.button("Lösung anzeigen", key="afm_sol"):
-
-        facs = []
-        p_steps = []
-
-        for direction, perc in steps:
-            p_dec = round(perc/100, 4)
-            if direction == "steigt":
-                facs.append(1 + p_dec)
-                p_steps.append(f"1 + {p_dec}")
-            else:
-                facs.append(1 - p_dec)
-                p_steps.append(f"1 - {p_dec}")
+        facs = [a for (_, _, a) in steps]
 
         prod = 1
         for f in facs:
@@ -357,9 +342,9 @@ def _changer_mean():
 
         a_mittel = prod ** (1/3)
 
-        latex_prod = " \\cdot ".join(p_steps)
+        latex_chain = " \\cdot ".join([f"{f:.4f}" for f in facs])
 
-        st.latex(rf"a_\text{{gesamt}} = {latex_prod} = {prod:.4f}")
+        st.latex(rf"a_\text{{gesamt}} = {latex_chain} = {prod:.4f}")
         st.latex(rf"a_\text{{mittel}} = \sqrt[3]{{{prod:.4f}}} = {a_mittel:.4f}")
 
 
