@@ -13,7 +13,7 @@ import exponentialgleichungen
 
 
 st.set_page_config(
-    page_title="Mathe Practice Plattform",
+    page_title="PRACTICE PLATFORM",
     page_icon="📘",
     layout="centered"
 )
@@ -40,15 +40,19 @@ page = st.sidebar.radio(
 #   STARTSEITE
 # =========================
 if page == "🏠 Start":
-    st.title("Mathe Practice Plattform")
+    st.title("PRACTICE PLATFORM")
+
     st.markdown(
         """
-        **Willkommen!**
+        Willkommen zu einer Übungsplattform für Mathematik.
 
-        Wähle links ein **Kapitel**, um Übungsaufgaben zu starten.
+        Auf der linken Seite findest du verschiedene **Themenbereiche**.  
+        Bei jedem Beispiel kannst du über die Schaltflächen  
+        *„Lösung anzeigen“* und *„Neues Beispiel“* selbstständig üben,
+        vergleichen und beliebig viele neue Aufgaben generieren.
 
-        **Hinweise:**
-        - Alle Aufgaben sind **zufällig generiert**
+        Wenn du Fragen hast oder dir irgendwo ein Fehler auffällt,
+        kannst du mich jederzeit über den **Chat auf Microsoft Teams** erreichen.
         """
     )
 
