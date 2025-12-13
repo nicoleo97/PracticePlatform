@@ -1,59 +1,83 @@
+# main.py
 import streamlit as st
 
+import funktionen_allgemein
+import lineare_funktionen
+import lineare_gleichungssysteme
+import matrizen
+import quadratische_funktionen
+import trigonometrie
+import exponentialfunktionen
+import aenderungsmass
+import exponentialgleichungen
+
+
 st.set_page_config(
-    page_title="Practice Plattform Mathematik",
-    layout="wide",
+    page_title="Mathe Practice Plattform",
+    page_icon="📘",
+    layout="centered"
 )
 
-st.sidebar.title("Kapitel")
+st.sidebar.title("Navigation")
 
-kapitel = st.sidebar.radio(
-    "Auswahl",
+page = st.sidebar.radio(
+    "Kapitel",
     [
-        "Funktionen Allgemein",
+        "🏠 Start",
+        "Funktionen allgemein",
         "Lineare Funktionen",
         "Lineare Gleichungssysteme",
         "Matrizen",
         "Quadratische Funktionen",
         "Trigonometrie",
-        "Exponentialgleichungen",
-        "Änderungsmaße",
         "Exponentialfunktionen",
-    ],
+        "Änderungsmaße",
+        "Exponentialgleichungen",
+    ]
 )
 
-if kapitel == "Funktionen Allgemein":
-    import funktionen_allgemein
+# =========================
+#   STARTSEITE
+# =========================
+if page == "🏠 Start":
+    st.title("Mathe Practice Plattform")
+    st.markdown(
+        """
+        **Willkommen!**
+
+        Wähle links ein **Kapitel**, um Übungsaufgaben zu starten.
+
+        **Hinweise:**
+        - Alle Aufgaben sind **zufällig generiert**
+        """
+    )
+
+# =========================
+#   KAPITEL
+# =========================
+elif page == "Funktionen allgemein":
     funktionen_allgemein.run()
 
-elif kapitel == "Lineare Funktionen":
-    import lineare_funktionen
+elif page == "Lineare Funktionen":
     lineare_funktionen.run()
 
-elif kapitel == "Lineare Gleichungssysteme":
-    import lineare_gleichungssysteme
+elif page == "Lineare Gleichungssysteme":
     lineare_gleichungssysteme.run()
 
-elif kapitel == "Matrizen":
-    import matrizen
+elif page == "Matrizen":
     matrizen.run()
 
-elif kapitel == "Quadratische Funktionen":
-    import quadratische_funktionen
+elif page == "Quadratische Funktionen":
     quadratische_funktionen.run()
 
-elif kapitel == "Trigonometrie":
-    import trigonometrie
+elif page == "Trigonometrie":
     trigonometrie.run()
 
-elif kapitel == "Exponentialgleichungen":
-    import exponentialgleichungen
-    exponentialgleichungen.run()
+elif page == "Exponentialfunktionen":
+    exponentialfunktionen.run()
 
-elif kapitel == "Änderungsmaße":
-    import aenderungsmass
+elif page == "Änderungsmaße":
     aenderungsmass.run()
 
-elif kapitel == "Exponentialfunktionen":
-    import exponentialfunktionen
-    exponentialfunktionen.run()
+elif page == "Exponentialgleichungen":
+    exponentialgleichungen.run()
