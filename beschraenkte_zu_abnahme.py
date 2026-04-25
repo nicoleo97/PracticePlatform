@@ -34,11 +34,11 @@ def generate_task():
     target = random.choice([int(S * 0.75), int(S * 0.8), int(S * 0.9)])
 
     text = (
-        f"Eine neue Lernplattform gewinnt Nutzerinnen und Nutzer. "
-        f"Die Nutzerzahl wird modelliert durch:\n\n"
-        f"**N(t) = {S} - {C} · {a}^t**\n\n"
-        fDabei ist t die Zeit in Jahren."
-    )
+    f"Eine neue Lernplattform gewinnt Nutzerinnen und Nutzer. "
+    f"Die Nutzerzahl wird modelliert durch:\n\n"
+    f"**N(t) = {S} - {C} · {a}^t**\n\n"
+    f"Dabei ist t die Zeit in Jahren."
+)
 
     return {
         "S": S,
