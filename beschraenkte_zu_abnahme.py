@@ -1,22 +1,29 @@
 import streamlit as st
 import random
 import math
+import numpy as np
+import matplotlib.pyplot as plt
 
 def run():
-    st.title("Beschränkte Zunahme")
+    st.title("Beschränkte Zu-/Abnahme")
+
+    # Fix für alte session_state Daten
+    if "bza_data" in st.session_state and "context" not in st.session_state.bza_data:
+        del st.session_state["bza_data"]
 
     if "bza_data" not in st.session_state:
         st.session_state.bza_data = generate()
 
     d = st.session_state.bza_data
 
-    st.markdown("### Angabe")
+    st.markdown("### Aufgabe")
     st.write(d["context"])
     st.latex(d["func"])
+    st.write("Dabei ist t die Zeit in Jahren.")
 
     st.markdown("### Fragen")
     st.write(f"1. Berechne den Funktionswert nach {d['t1']} Jahren.")
-    st.write(f"2. Nach wie vielen Jahren beträgt der Wert {d['target']}?")
+    st.write(f"2. Nach wie vielen Jahren beträgt die Nutzerzahl {d['target']}?")
     st.write("3. Bestimme die Schranke der Funktion.")
 
     if st.button("Lösung anzeigen"):
@@ -38,25 +45,17 @@ def generate():
         func = rf"N(t) = {S}\cdot(1 - {a}^t)"
         plain = f"{S}*(1-{a}^t)"
         mode = "a"
-
     else:
         func = rf"N(t) = {S}\cdot(1 - e^{{{lam}t}})"
         plain = f"{S}*(1-e^({lam}t))"
         mode = "e"
 
     t1 = random.choice([2, 3, 4, 5, 6])
-    target = random.choice([
-        int(S * 0.5),
-        int(S * 0.6),
-        int(S * 0.7),
-        int(S * 0.8),
-        int(S * 0.9),
-    ])
+    target = int(S * random.choice([0.5, 0.6, 0.7, 0.8, 0.9]))
 
     context = (
         "Die Nutzerzahl einer neuen Lernplattform wächst mit der Zeit. "
-        "Da es langfristig eine maximale Anzahl möglicher Nutzer*innen gibt, "
-        "wird das Wachstum durch eine beschränkte Zunahme modelliert."
+        "Sie nähert sich langfristig einer maximalen Nutzerzahl an."
     )
 
     return {
@@ -72,32 +71,48 @@ def generate():
     }
 
 
+def N(d, t):
+    if d["mode"] == "a":
+        return d["S"] * (1 - d["a"]**t)
+    else:
+        return d["S"] * (1 - math.e**(d["lam"] * t))
+
+
 def solve(d):
     S = d["S"]
-    a = d["a"]
-    lam = d["lam"]
     t1 = d["t1"]
     target = d["target"]
 
-    if d["mode"] == "a":
-        value = S * (1 - a**t1)
-        t = math.log(1 - target / S) / math.log(a)
+    value = N(d, t1)
 
+    if d["mode"] == "a":
+        t = math.log(1 - target / S) / math.log(d["a"])
     else:
-        value = S * (1 - math.e**(lam * t1))
-        t = math.log(1 - target / S) / lam
+        t = math.log(1 - target / S) / d["lam"]
 
     st.markdown("### Lösung")
 
     st.write("1. Funktionswert:")
     st.latex(rf"N({t1}) = {value:.2f}")
-    st.write(f"Nach {t1} Jahren beträgt der Wert ungefähr **{round(value)}**.")
+    st.write(f"Nach {t1} Jahren: **{round(value)}**")
 
     st.write("2. Zeitpunkt:")
     st.latex(rf"N(t) = {target}")
     st.code(f"Löse({d['plain']} = {target})", language="text")
-    st.write(f"Ergebnis: **t ≈ {t:.2f} Jahre**")
+    st.write(f"t ≈ {t:.2f} Jahre")
 
     st.write("3. Schranke:")
     st.latex(rf"S = {S}")
-    st.write(f"Die Funktion nähert sich langfristig dem Wert **{S}** an.")
+
+    st.markdown("### Plot")
+    x = np.linspace(0, 20, 200)
+    y = [N(d, xi) for xi in x]
+
+    fig, ax = plt.subplots()
+    ax.plot(x, y)
+    ax.axhline(S, linestyle="--")
+    ax.set_xlabel("t")
+    ax.set_ylabel("N(t)")
+    ax.grid(True)
+
+    st.pyplot(fig)
