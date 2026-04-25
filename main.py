@@ -10,6 +10,9 @@ import trigonometrie
 import exponentialfunktionen
 import aenderungsmass
 import exponentialgleichungen
+import beschraenkte_zu_abnahme
+import zinseszins
+import rentenrechnung
 
 
 st.set_page_config(
@@ -85,3 +88,12 @@ elif page == "Änderungsmaße":
 
 elif page == "Exponentialgleichungen":
     exponentialgleichungen.run()
+
+elif page == "Beschränkte Zu-/Abnahme":
+    beschraenkte_zu_abnahme.run()
+
+elif page == "Zinseszins":
+    zinseszins.run()
+
+elif page == "Rentenrechnung":
+    rentenrechnung.run()
