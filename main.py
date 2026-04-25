@@ -36,6 +36,9 @@ page = st.sidebar.radio(
         "Exponentialfunktionen",
         "Änderungsmaße",
         "Exponentialgleichungen",
+        "Beschränkte Zu-/Abnahme",
+        "Zinseszins",
+        "Rentenrechnung",
     ]
 )
 
